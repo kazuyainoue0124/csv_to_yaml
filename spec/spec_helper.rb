@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "csv_to_yaml"
+require "tempfile"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
