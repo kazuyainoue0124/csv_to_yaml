@@ -22,9 +22,6 @@ Gem::Specification.new do |spec|
   spec.test_files = Dir.glob("spec/**/*_spec.rb")
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "csv"
-  spec.add_dependency "yaml"
-
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rubocop", "~> 1.21"
