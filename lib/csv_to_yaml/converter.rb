@@ -13,8 +13,6 @@ module CsvToYaml
       validate_csv_format(input_csv)
       data = read_csv(input_csv)
       write_yaml(data, output_yaml)
-    rescue InvalidExtensionError => e
-      raise e
     rescue EmptyFileError => e
       raise e
     rescue InvalidCsvFormatError => e
@@ -30,7 +28,6 @@ module CsvToYaml
     # @param file_path [String] Path to the input file
     # @raise [ConversionError] If the file is not a valid CSV
     def validate_csv_format(file_path)
-      raise InvalidExtensionError, "Input file '#{file_path}' does not have a .csv extension" unless File.extname(file_path).downcase == ".csv"
       raise EmptyFileError, "Input file '#{file_path}' is empty" if File.zero?(file_path)
 
       File.open(file_path, "rb") do |file|
