@@ -28,27 +28,29 @@ RSpec.describe CsvToYaml do
           CSV
           input_csv.rewind
         end
-  
+
         it "converts CSV to YAML with correct data types" do
           described_class.convert(input_csv.path, output_yaml.path)
           yaml_content = YAML.load_file(output_yaml.path)
-  
-          expect(yaml_content).to eq([
-            { "id" => 1, "name" => "Alice",   "age" => 30, "salary" => 50_000.0, "active" => true },
-            { "id" => 2, "name" => "Bob",     "age" => 25, "salary" => 40_000.5, "active" => false },
-            { "id" => 3, "name" => "Charlie", "age" => 35, "salary" => 60_000.0, "active" => true }
-          ])
+
+          expect(yaml_content).to eq(
+            [
+              { "id" => 1, "name" => "Alice",   "age" => 30, "salary" => 50_000.0, "active" => true },
+              { "id" => 2, "name" => "Bob",     "age" => 25, "salary" => 40_000.5, "active" => false },
+              { "id" => 3, "name" => "Charlie", "age" => 35, "salary" => 60_000.0, "active" => true }
+            ]
+          )
         end
       end
 
       # Test for overwriting existing output file
       context "when output file already exists" do
         let(:existing_output) { Tempfile.new(["existing_output", ".yml"]) }
-  
+
         before do
           existing_output.write("Existing content\n")
           existing_output.rewind
-  
+
           input_csv.write(<<~CSV)
             id,name
             1,Alice
@@ -56,20 +58,22 @@ RSpec.describe CsvToYaml do
           CSV
           input_csv.rewind
         end
-  
+
         after do
           existing_output.close
           existing_output.unlink
         end
-  
+
         it "overwrites the existing file" do
           described_class.convert(input_csv.path, existing_output.path)
           yaml_content = YAML.load_file(existing_output.path)
-  
-          expect(yaml_content).to eq([
-            { "id" => 1, "name" => "Alice" },
-            { "id" => 2, "name" => "Bob" }
-          ])
+
+          expect(yaml_content).to eq(
+            [
+              { "id" => 1, "name" => "Alice" },
+              { "id" => 2, "name" => "Bob" }
+            ]
+          )
           expect(File.read(existing_output.path)).not_to include("Existing content")
         end
       end
@@ -77,7 +81,7 @@ RSpec.describe CsvToYaml do
       # Test for creating new output file
       context "when output file does not exist" do
         let(:non_existent_output) { "non_existent_output.yml" }
-  
+
         before do
           input_csv.write(<<~CSV)
             id,name
@@ -86,21 +90,23 @@ RSpec.describe CsvToYaml do
           CSV
           input_csv.rewind
         end
-  
+
         after do
           File.delete(non_existent_output) if File.exist?(non_existent_output)
         end
-  
+
         it "creates a new file" do
           expect(File.exist?(non_existent_output)).to be false
           described_class.convert(input_csv.path, non_existent_output)
           expect(File.exist?(non_existent_output)).to be true
-  
+
           yaml_content = YAML.load_file(non_existent_output)
-          expect(yaml_content).to eq([
-            { "id" => 1, "name" => "Alice" },
-            { "id" => 2, "name" => "Bob" }
-          ])
+          expect(yaml_content).to eq(
+            [
+              { "id" => 1, "name" => "Alice" },
+              { "id" => 2, "name" => "Bob" }
+            ]
+          )
         end
       end
 
@@ -113,11 +119,11 @@ RSpec.describe CsvToYaml do
           end
           input_csv.rewind
         end
-  
+
         it "processes large files correctly" do
           described_class.convert(input_csv.path, output_yaml.path)
           yaml_content = YAML.load_file(output_yaml.path)
-  
+
           expect(yaml_content.size).to eq(10_000)
           expect(yaml_content.first).to eq({ "id" => 0, "name" => "name0", "value" => 0 })
           expect(yaml_content.last).to eq({ "id" => 9999, "name" => "name9999", "value" => 99_990 })
@@ -132,11 +138,11 @@ RSpec.describe CsvToYaml do
           input_csv.write("id,name,age\n")
           input_csv.rewind
         end
-  
+
         it "produces an empty YAML file" do
           described_class.convert(input_csv.path, output_yaml.path)
           yaml_content = YAML.load_file(output_yaml.path)
-  
+
           expect(yaml_content).to eq([])
         end
       end
@@ -153,17 +159,19 @@ RSpec.describe CsvToYaml do
           CSV
           input_csv.rewind
         end
-  
+
         it "converts data types correctly" do
           described_class.convert(input_csv.path, output_yaml.path)
           yaml_content = YAML.load_file(output_yaml.path)
-  
-          expect(yaml_content).to eq([
-            { "id" => 1, "name" => "Test",             "value" => 123 },
-            { "id" => 2, "name" => "Another test",     "value" => 456.78 },
-            { "id" => 3, "name" => "Yet another test", "value" => true },
-            { "id" => 4, "name" => "String test",      "value" => "abc" }
-          ])
+
+          expect(yaml_content).to eq(
+            [
+              { "id" => 1, "name" => "Test",             "value" => 123 },
+              { "id" => 2, "name" => "Another test",     "value" => 456.78 },
+              { "id" => 3, "name" => "Yet another test", "value" => true },
+              { "id" => 4, "name" => "String test",      "value" => "abc" }
+            ]
+          )
         end
       end
 
@@ -178,16 +186,18 @@ RSpec.describe CsvToYaml do
           CSV
           input_csv.rewind
         end
-  
+
         it "handles empty data rows correctly" do
           described_class.convert(input_csv.path, output_yaml.path)
           yaml_content = YAML.load_file(output_yaml.path)
-  
-          expect(yaml_content).to eq([
-            { "id" => 1, "name" => "Alice", "age" => nil },
-            { "id" => 2, "name" => nil,     "age" => nil },
-            { "id" => 3, "name" => "Bob",   "age" => 30 }
-          ])
+
+          expect(yaml_content).to eq(
+            [
+              { "id" => 1, "name" => "Alice", "age" => nil },
+              { "id" => 2, "name" => nil,     "age" => nil },
+              { "id" => 3, "name" => "Bob",   "age" => 30 }
+            ]
+          )
         end
       end
     end
@@ -211,7 +221,7 @@ RSpec.describe CsvToYaml do
           end.to raise_error(CsvToYaml::ConversionError, /Failed to convert CSV to YAML/)
         end
       end
-  
+
       # Test for invalid output file path
       context "with invalid output file path" do
         before do
@@ -237,7 +247,7 @@ RSpec.describe CsvToYaml do
           input_csv.write("")
           input_csv.rewind
         end
-  
+
         it "raises a EmptyFileError" do
           expect do
             described_class.convert(input_csv.path, output_yaml.path)
@@ -256,11 +266,12 @@ RSpec.describe CsvToYaml do
           CSV
           input_csv.rewind
         end
-  
+
         it "raises a InvalidCsvFormatError" do
           expect do
             described_class.convert(input_csv.path, output_yaml.path)
-          end.to raise_error(CsvToYaml::InvalidCsvFormatError, /The file content does not appear to be a valid CSV format/)
+          end.to raise_error(CsvToYaml::InvalidCsvFormatError,
+                             /The file content does not appear to be a valid CSV format/)
         end
       end
     end
