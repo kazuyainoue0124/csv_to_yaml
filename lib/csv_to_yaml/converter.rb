@@ -8,7 +8,9 @@ module CsvToYaml
     # @param input_csv [String] Path to input CSV file
     # @param output_yaml [String] Path to output YAML file
     # @return [void]
-    # @raise [ConversionError] If any error occurs during conversion
+    # @raise [CsvToYaml::ConversionError] If any error occurs during conversion
+    # @raise [CsvToYaml::EmptyFileError] If the input file is empty
+    # @raise [CsvToYaml::InvalidCsvFormatError] If the input file is not in a valid CSV format
     def convert(input_csv, output_yaml)
       validate_csv_format(input_csv)
       data = read_csv(input_csv)
@@ -26,7 +28,8 @@ module CsvToYaml
     # Validate the format of the input file
     #
     # @param file_path [String] Path to the input file
-    # @raise [ConversionError] If the file is not a valid CSV
+    # @raise [CsvToYaml::EmptyFileError] If the file is empty
+    # @raise [CsvToYaml::InvalidCsvFormatError] If the file is not a valid CSV
     def validate_csv_format(file_path)
       raise EmptyFileError, "Input file '#{file_path}' is empty" if File.zero?(file_path)
 

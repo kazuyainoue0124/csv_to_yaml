@@ -245,8 +245,8 @@ RSpec.describe CsvToYaml do
         end
       end
 
-      # Test for CSV format
-      context "with empty CSV file" do
+      # Test for invalid CSV format
+      context "with invalid CSV format" do
         before do
           input_csv.write(<<~CSV)
             id:name:age
