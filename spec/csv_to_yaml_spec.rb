@@ -195,6 +195,16 @@ RSpec.describe CsvToYaml do
     context "Error handling" do
       # Test for invalid input file path
       context "with invalid input file path" do
+        before do
+          input_csv.write(<<~CSV)
+            id,name,age
+            1,Alice,30
+            2,Bob,25
+            3,Charlie
+          CSV
+          input_csv.rewind
+        end
+
         it "raises a ConversionError" do
           expect do
             described_class.convert("invalid.csv", output_yaml.path)
@@ -204,23 +214,19 @@ RSpec.describe CsvToYaml do
   
       # Test for invalid output file path
       context "with invalid output file path" do
+        before do
+          input_csv.write(<<~CSV)
+            id,name,age
+            1,Alice,30
+            2,Bob,25
+            3,Charlie
+          CSV
+          input_csv.rewind
+        end
+
         it "raises a ConversionError" do
           expect do
             described_class.convert(input_csv.path, "/invalid/path/output.yml")
-          end.to raise_error(CsvToYaml::ConversionError, /Failed to convert CSV to YAML/)
-        end
-      end
-
-      # Test for completely empty CSV file
-      context "with completely empty CSV file" do
-        before do
-          input_csv.write("")
-          input_csv.rewind
-        end
-  
-        it "raises a ConversionError" do
-          expect do
-            described_class.convert(input_csv.path, output_yaml.path)
           end.to raise_error(CsvToYaml::ConversionError, /Failed to convert CSV to YAML/)
         end
       end
@@ -243,6 +249,20 @@ RSpec.describe CsvToYaml do
           expect do
             described_class.convert(non_csv_file.path, output_yaml.path)
           end.to raise_error(CsvToYaml::InvalidExtensionError, /Input file '#{non_csv_file.path}' does not have a .csv extension/)
+        end
+      end
+
+      # Test for empty CSV file
+      context "with empty CSV file" do
+        before do
+          input_csv.write("")
+          input_csv.rewind
+        end
+  
+        it "raises a EmptyFileError" do
+          expect do
+            described_class.convert(input_csv.path, output_yaml.path)
+          end.to raise_error(CsvToYaml::EmptyFileError, /Input file '#{input_csv.path}' is empty/)
         end
       end
     end
