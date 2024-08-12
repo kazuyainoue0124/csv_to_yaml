@@ -1,24 +1,52 @@
 # CsvToYaml
 
-TODO: Delete this and the text below, and describe your gem
+CsvToYaml is a Ruby gem that provides an easy way to convert CSV(Comma Separated Values) files to YAML(YAML Ain't Markup Language) format. It handles various data types and attempts to infer and convert them appropriately.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/csv_to_yaml`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Features
+
+- Convert CSV files to YAML format
+- Automatic data type inference and conversion
+- Handles empty files and invalid CSV formats
+- Simple and easy-to-use API
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+    $ bundle add csv_to_yaml
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+    $ gem install csv_to_yaml
 
 ## Usage
 
-TODO: Write usage instructions here
+Here's a basic example of how to use CsvToYaml:
+
+```ruby
+require 'csv_to_yaml'
+
+# Convert a CSV file to YAML
+CsvToYaml.convert('input.csv', 'output.yaml')
+```
+
+This will read the `input.csv` file, convert its contents to YAML format, and save the result to `output.yaml`.
+
+## Error Handling
+
+CsvToYaml provides specific error classes to handle different scenarios:
+
+```ruby
+begin
+  CsvToYaml.convert('input.csv', 'output.yaml')
+rescue CsvToYaml::EmptyFileError
+  puts "The input file is empty"
+rescue CsvToYaml::InvalidCsvFormatError
+  puts "The input file is not a valid CSV"
+rescue CsvToYaml::ConversionError => e
+  puts "Conversion failed: #{e.message}"
+end
+```
 
 ## Development
 
@@ -28,7 +56,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/csv_to_yaml.
+Bug reports and pull requests are welcome on GitHub at https://github.com/kazuyainoue0124/csv_to_yaml.
 
 ## License
 
