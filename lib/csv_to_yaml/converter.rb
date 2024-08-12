@@ -35,7 +35,7 @@ module CsvToYaml
 
       File.open(file_path, "rb") do |file|
         first_line = file.readline.force_encoding("ASCII-8BIT")
-        unless first_line.include?(",".b) || first_line.include?(";".b) || first_line.include?("\t".b)
+        unless first_line.include?(",".b)
           raise InvalidCsvFormatError, "The file content does not appear to be a valid CSV format"
         end
       end
