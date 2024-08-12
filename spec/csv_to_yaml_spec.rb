@@ -265,6 +265,25 @@ RSpec.describe CsvToYaml do
           end.to raise_error(CsvToYaml::EmptyFileError, /Input file '#{input_csv.path}' is empty/)
         end
       end
+
+      # Test for CSV format
+      context "with empty CSV file" do
+        before do
+          input_csv.write(<<~CSV)
+            id:name:age
+            1:Alice:30
+            2:Bob:25
+            3:Charlie
+          CSV
+          input_csv.rewind
+        end
+  
+        it "raises a InvalidCsvFormatError" do
+          expect do
+            described_class.convert(input_csv.path, output_yaml.path)
+          end.to raise_error(CsvToYaml::InvalidCsvFormatError, /The file content does not appear to be a valid CSV format/)
+        end
+      end
     end
   end
 end

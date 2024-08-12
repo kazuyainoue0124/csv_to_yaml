@@ -17,6 +17,8 @@ module CsvToYaml
       raise e
     rescue EmptyFileError => e
       raise e
+    rescue InvalidCsvFormatError => e
+      raise e
     rescue StandardError => e
       raise ConversionError, "Failed to convert CSV to YAML: #{e.message}"
     end
@@ -34,7 +36,7 @@ module CsvToYaml
       File.open(file_path, "rb") do |file|
         first_line = file.readline.force_encoding("ASCII-8BIT")
         unless first_line.include?(",".b) || first_line.include?(";".b) || first_line.include?("\t".b)
-          raise ConversionError, "The file content does not appear to be a valid CSV format"
+          raise InvalidCsvFormatError, "The file content does not appear to be a valid CSV format"
         end
       end
     rescue EOFError
