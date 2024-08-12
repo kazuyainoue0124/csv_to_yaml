@@ -225,7 +225,7 @@ RSpec.describe CsvToYaml do
         end
       end
 
-      # Test for non-CSV input file
+      # Test for the extension of the input file
       context "with non-CSV input file" do
         let(:non_csv_file) { Tempfile.new(["non_csv", ".txt"]) }
   
@@ -242,7 +242,7 @@ RSpec.describe CsvToYaml do
         it "raises an error" do
           expect do
             described_class.convert(non_csv_file.path, output_yaml.path)
-          end.to raise_error(CsvToYaml::ConversionError, /Failed to convert CSV to YAML/)
+          end.to raise_error(CsvToYaml::InvalidExtensionError, /Input file '#{non_csv_file.path}' does not have a .csv extension/)
         end
       end
     end
