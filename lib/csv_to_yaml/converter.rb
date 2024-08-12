@@ -10,6 +10,7 @@ module CsvToYaml
     # @return [void]
     # @raise [ConversionError] If any error occurs during conversion
     def convert(input_csv, output_yaml)
+      validate_csv_format(input_csv)
       data = read_csv(input_csv)
       write_yaml(data, output_yaml)
     rescue StandardError => e
@@ -17,6 +18,23 @@ module CsvToYaml
     end
 
     private
+
+    # Validate the format of the input file
+    #
+    # @param file_path [String] Path to the input file
+    # @raise [ConversionError] If the file is not a valid CSV
+    def validate_csv_format(file_path)
+      raise ConversionError, "The file does not have a .csv extension" unless File.extname(file_path).downcase == ".csv"
+
+      File.open(file_path, "rb") do |file|
+        first_line = file.readline.force_encoding("ASCII-8BIT")
+        unless first_line.include?(",".b) || first_line.include?(";".b) || first_line.include?("\t".b)
+          raise ConversionError, "The file content does not appear to be a valid CSV format"
+        end
+      end
+    rescue EOFError
+      raise ConversionError, "The input file is empty or not readable"
+    end
 
     # Read and parse CSV file
     #
