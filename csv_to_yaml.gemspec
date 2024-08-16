@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["kazuyainoue0124"]
   spec.email = ["kazuyainoue0124@users.noreply.github.com"]
 
-  spec.summary = "A gem to convert CSV data to YAML format"
-  spec.description = "This gem reads a CSV file and converts its content into a YAML file."
+  spec.summary = "A gem to convert CSV data to YAML format, particularly for Rails seed data."
+  spec.description = "CsvToYaml is a Ruby gem that converts CSV files to YAML format, with automatic data type inference, allowing seamless creation of YAML files for Rails seed data."
   spec.homepage = "https://github.com/kazuyainoue0124/csv_to_yaml"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
